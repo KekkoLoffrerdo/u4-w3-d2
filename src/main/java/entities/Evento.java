@@ -5,8 +5,11 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+
 @Entity
 @Table(name = "eventi")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_evento_esteso")
 public class Evento {
 
     @Id
@@ -29,15 +32,21 @@ public class Evento {
     @Column(name = "numero_massimo_partecipanti", nullable = false)
     private int numeroMassimoPartecipanti;
 
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
     public Evento() {
     }
 
-    public Evento(String titolo, LocalDate dataEvento, String descrizione, TipoEvento tipoEvento, int numeroMassimoPartecipanti) {
+    public Evento(String titolo, LocalDate dataEvento, String descrizione, TipoEvento tipoEvento,
+                  int numeroMassimoPartecipanti, Location location) {
         this.titolo = titolo;
         this.dataEvento = dataEvento;
         this.descrizione = descrizione;
         this.tipoEvento = tipoEvento;
         this.numeroMassimoPartecipanti = numeroMassimoPartecipanti;
+        this.location = location;
     }
 
     public long getId() {
@@ -64,6 +73,10 @@ public class Evento {
         return numeroMassimoPartecipanti;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
     public void setTitolo(String titolo) {
         this.titolo = titolo;
     }
@@ -84,6 +97,10 @@ public class Evento {
         this.numeroMassimoPartecipanti = numeroMassimoPartecipanti;
     }
 
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "Evento{" +
@@ -93,6 +110,7 @@ public class Evento {
                 ", descrizione='" + descrizione + '\'' +
                 ", tipoEvento=" + tipoEvento +
                 ", numeroMassimoPartecipanti=" + numeroMassimoPartecipanti +
+                ", location=" + location +
                 '}';
     }
 }
